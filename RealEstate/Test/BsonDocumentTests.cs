@@ -4,6 +4,7 @@
 
     using MongoDB.Bson;
     using MongoDB.Bson.IO;
+    using MongoDB.Bson.Serialization;
 
     using NUnit.Framework;
 
@@ -63,7 +64,24 @@
 
             Console.WriteLine((double)person["age"] + 10);
             Console.WriteLine(person["age"].IsInt32);
-            Console.WriteLine(person["age"].IsString    );
+            Console.WriteLine(person["age"].IsString);
+        }
+
+        [Test]
+        public void ToBson()
+        {
+            var person = new BsonDocument
+                         {
+                             {"name","erdal"},
+                             {"lastName","dalkıran"}
+
+                         };
+            var bson = person.ToBson();
+            Console.WriteLine(BitConverter.ToString( bson));
+
+            var personDe = BsonSerializer.Deserialize<BsonDocument>(bson);
+
+            Console.WriteLine(personDe);
         }
 
     }
