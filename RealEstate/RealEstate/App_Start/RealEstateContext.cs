@@ -7,6 +7,7 @@ namespace RealEstate.App_Start
     using MongoDB.Driver;
 
     using RealEstate.Properties;
+    using RealEstate.Rentals;
 
     public class RealEstateContext
     {
@@ -26,5 +27,13 @@ namespace RealEstate.App_Start
         }
 
         #endregion
+
+        public MongoCollection<Rental> Rentals
+        {
+            get
+            {
+                return Database.GetCollection<Rental>("rentals");
+            }
+        } 
     }
 }

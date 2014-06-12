@@ -1,0 +1,41 @@
+﻿@model IEnumerable<RealEstate.Rentals.Rental>
+
+@{
+    ViewBag.Title = "Rental Listings";
+}
+
+<h2>Rental Listings</h2>
+
+<p>@Html.ActionLink("Post Rental", "Post")</p>
+<table>
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(x => x.Description)</th>
+            <th>@Html.DisplayNameFor(x => x.NumberOfRooms)</th>
+            <th>@Html.DisplayNameFor(x => x.Address)</th>
+            <th>@Html.DisplayNameFor(x => x.Price)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var rental in Model)
+        {
+            <tr>
+                <td>
+                    @rental.Description
+                </td>
+                <td>
+                    @rental.NumberOfRooms
+                </td>
+                <td>
+                    @foreach (var address in rental.Address)
+                    {
+                        @: @address <br />
+                    }
+                </td>
+                <td>
+                    @rental.Price
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
