@@ -46,6 +46,14 @@ namespace RealEstate.Rentals
         [BsonRepresentation(BsonType.Double)]
         public decimal Price { get; set; }
 
+        public IList<PriceAdjustment> Adjustments  = new List<PriceAdjustment>(); 
+
         #endregion
+
+        public void AdjustPrice(AdjustPrice adjustPrice)
+        {
+            Adjustments.Add(new PriceAdjustment(adjustPrice,Price));
+            Price = adjustPrice.NewPrice;
+        }
     }
 }

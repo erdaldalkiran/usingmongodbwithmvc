@@ -1,16 +1,44 @@
-﻿// <copyright file="RentalController.cs " company="Socar Turkey Petrol-Enerji Dağıtım A.Ş." owner="Erdal Dalkıran">
-// <createDate>12/06/2014 11:08</createDate>
-// </copyright>
-namespace RealEstate.Controllers
+﻿namespace RealEstate.Controllers
 {
     using System.Web.Mvc;
+
+    using MongoDB.Bson;
+    using MongoDB.Driver;
+    using MongoDB.Driver.Builders;
 
     using RealEstate.App_Start;
     using RealEstate.Rentals;
 
     public class RentalController : Controller
     {
+        #region Fields
+
         public readonly RealEstateContext Context = new RealEstateContext();
+
+        #endregion
+
+        #region Public Methods and Operators
+
+        public ActionResult AdjustPrice(string id)
+        {
+            var model = GetRental(id);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult AdjustPrice(string id, AdjustPrice adjustPrice)
+        {
+            var rental = GetRental(id);
+            rental.AdjustPrice(adjustPrice);
+            Context.Rentals.Save(rental);
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Delete(string id)
+        {
+            var result = Context.Rentals.Remove(Query.EQ("_id",new ObjectId(id)),RemoveFlags.Single,WriteConcern.Acknowledged);
+            return RedirectToAction("Index");
+        }
 
 
         public ActionResult Index()
@@ -32,5 +60,16 @@ namespace RealEstate.Controllers
             Context.Rentals.Insert(rental);
             return RedirectToAction("Index");
         }
+
+        #endregion
+
+        #region Methods
+
+        private Rental GetRental(string id)
+        {
+            return Context.Rentals.FindOneById(new ObjectId(id));
+        }
+
+        #endregion
     }
 }

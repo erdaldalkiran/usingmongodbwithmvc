@@ -7,13 +7,16 @@
 <h2>Rental Listings</h2>
 
 <p>@Html.ActionLink("Post Rental", "Post")</p>
-<table>
+<table class="table">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(x => x.Description)</th>
             <th>@Html.DisplayNameFor(x => x.NumberOfRooms)</th>
             <th>@Html.DisplayNameFor(x => x.Address)</th>
             <th>@Html.DisplayNameFor(x => x.Price)</th>
+            <th>Last Adjustmen</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +38,11 @@
                 <td>
                     @rental.Price
                 </td>
+                <td>
+                    @rental.Adjustments.Select(x => x.Describe()).LastOrDefault()
+                </td>
+                <td>@Html.ActionLink("Adjust Price", "AdjustPrice", new { id = rental.Id })</td>
+                <td>@Html.ActionLink("Delete", "Delete", new { id = rental.Id })</td>
             </tr>
         }
     </tbody>
