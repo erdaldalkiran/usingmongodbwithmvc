@@ -22,14 +22,14 @@ namespace RealEstate.Rentals
 
         public Rental()
         {
-            
+
         }
         public Rental(PostRental postRental)
         {
             NumberOfRooms = postRental.NumberOfRooms;
             Description = postRental.Description;
             Price = postRental.Price;
-            Address = (postRental.Address ?? string.Empty).Split('\n').ToList(); 
+            Address = (postRental.Address ?? string.Empty).Split('\n').ToList();
         }
 
         #endregion
@@ -46,13 +46,20 @@ namespace RealEstate.Rentals
         [BsonRepresentation(BsonType.Double)]
         public decimal Price { get; set; }
 
-        public IList<PriceAdjustment> Adjustments  = new List<PriceAdjustment>(); 
+        public string ImageId { get; set; }
+
+        public bool HasImage()
+        {
+            return !string.IsNullOrEmpty(ImageId);
+        }
+
+        public IList<PriceAdjustment> Adjustments = new List<PriceAdjustment>();
 
         #endregion
 
         public void AdjustPrice(AdjustPrice adjustPrice)
         {
-            Adjustments.Add(new PriceAdjustment(adjustPrice,Price));
+            Adjustments.Add(new PriceAdjustment(adjustPrice, Price));
             Price = adjustPrice.NewPrice;
         }
     }

@@ -25,6 +25,7 @@
             <th>Last Adjustment</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -50,6 +51,7 @@
                     @rental.Adjustments.Select(x => x.Describe()).LastOrDefault()
                 </td>
                 <td>@Html.ActionLink("Adjust Price", "AdjustPrice", new { id = rental.Id })</td>
+                <td>@Html.ActionLink("Attach Image", "AttachImage", new { id = rental.Id })</td>
                 <td>@Html.ActionLink("Delete", "Delete", new { id = rental.Id })</td>
             </tr>
         }

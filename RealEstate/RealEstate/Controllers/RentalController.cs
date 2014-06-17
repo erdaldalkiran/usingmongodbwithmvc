@@ -1,12 +1,17 @@
 ﻿namespace RealEstate.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Web;
     using System.Web.Mvc;
+
+    using Antlr.Runtime.Misc;
 
     using MongoDB.Bson;
     using MongoDB.Driver;
     using MongoDB.Driver.Builders;
+    using MongoDB.Driver.GridFS;
     using MongoDB.Driver.Linq;
 
     using RealEstate.App_Start;
@@ -99,6 +104,43 @@
             var rental = new Rental(model);
             Context.Rentals.Insert(rental);
             return RedirectToAction("Index");
+        }
+
+        public ActionResult AttachImage(string id)
+        {
+            var rental = GetRental(id);
+            return View(rental);
+        }
+
+        [HttpPost]
+        public ActionResult AttachImage(string id, HttpPostedFileBase file)
+        {
+            var rental = GetRental(id);
+            var imageId = ObjectId.GenerateNewId();
+            rental.ImageId = imageId.ToString();
+            Context.Rentals.Save(rental);
+
+            var options = new MongoGridFSCreateOptions
+                          {
+                              ContentType = file.ContentType,
+                              Id = imageId
+                          };
+            var bytes = new byte[file.InputStream.Length];
+            var byteCOunt = file.InputStream.Read(bytes, 0, (int)file.InputStream.Length);
+            var base64Content = Convert.ToBase64String(bytes);
+            Context.Database.GridFS.Upload(file.InputStream, file.FileName, options);
+            return RedirectToAction("Index");
+        }
+
+        public FileResult GetImage(string id)
+        {
+            var image = Context.Database.GridFS.FindOneById(new ObjectId(id));
+            if (image == null)
+            {
+                return null;
+            }
+
+            return this.File(image.OpenRead(), image.ContentType);
         }
 
         #endregion
